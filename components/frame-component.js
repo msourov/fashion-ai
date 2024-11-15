@@ -6,7 +6,7 @@ import { RiArrowDownSFill, RiMenu3Line } from "react-icons/ri";
 import { AiOutlineClose } from "react-icons/ai";
 import PropTypes from "prop-types";
 import { FaHeart } from "react-icons/fa";
-import { signIn, signOut, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { Text } from "@mantine/core";
 import { useAuth } from "../context/authContext";
@@ -31,6 +31,12 @@ const FrameComponent = ({ className = "" }) => {
     }
   }, [status]);
 
+  const isActiveLink = (path) => {
+    return router.pathname === path
+      ? "text-darkorange font-semibold"
+      : "text-gray-100";
+  };
+
   return (
     <header
       className={`w-full flex flex-col items-center gap-4 pt-4 ${className}`}
@@ -49,26 +55,23 @@ const FrameComponent = ({ className = "" }) => {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex gap-16 hover:text-darkorange font-medium">
-          <Link href="/" className="text-gray-100 no-underline">
+          <Link href="/" className={`${isActiveLink("/")}`}>
             Home
           </Link>
-          <Link
-            href="/showroom"
-            className="font-semibold text-darkorange no-underline"
-          >
+          <Link href="/showroom" className={`${isActiveLink("/showroom")}`}>
             Showroom
           </Link>
-          <Link href="/pricing" className="text-gray-100 no-underline">
+          <Link href="/pricing" className={`${isActiveLink("/pricing")}`}>
             Pricing
           </Link>
           <Link
             href="/products"
-            className="text-gray-100 flex items-center no-underline relative"
+            className={`${isActiveLink("/products")} flex items-center`}
           >
             Products
             <RiArrowDownSFill className="text-black" />
           </Link>
-          <Link href="/blog" className="text-gray-100 no-underline">
+          <Link href="/blog" className={`${isActiveLink("/blog")}`}>
             Blog
           </Link>
         </nav>
