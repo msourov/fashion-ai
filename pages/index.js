@@ -150,9 +150,7 @@ const ECommerceProductsSelect = () => {
       </section>
       <div className="bg-coral-200 w-full flex flex-row items-start justify-center py-6">
         <footer className="h-[59.1px] relative bg-coral-200 hidden max-w-full" />
-        <div className="relative font-medium z-[1]">
-          Copyright © 2024 ib-themesinc.
-        </div>
+        <div className="relative font-medium z-[1]">Copyright © 2024.</div>
       </div>
     </div>
   );

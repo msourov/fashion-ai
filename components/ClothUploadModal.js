@@ -152,7 +152,7 @@ const ClothesModal = ({ open, setOpen }) => {
                 />
                 <label
                   htmlFor="image-upload"
-                  className="cursor-pointer text-blue-500"
+                  className="cursor-pointer text-purple-800 text-lg font-bold opacity-50"
                 >
                   Click to Upload
                 </label>

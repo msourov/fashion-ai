@@ -17,6 +17,8 @@ const FrameComponent = ({ className = "" }) => {
   const { isAuthenticated, logout, handleGoogleSignIn } = useAuth();
   const router = useRouter();
 
+  const protectedRoutes = ["/profile"];
+
   const toggleMenu = () => {
     setMenuOpen((prev) => !prev);
   };
@@ -26,10 +28,14 @@ const FrameComponent = ({ className = "" }) => {
   };
 
   useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/");
+    if (status === "loading") return;
+    if (
+      status === "unauthenticated" &&
+      protectedRoutes.includes(router.pathname)
+    ) {
+      router.push("/login");
     }
-  }, [status]);
+  }, [status, router.pathname]);
 
   const isActiveLink = (path) => {
     return router.pathname === path
@@ -141,31 +147,49 @@ const FrameComponent = ({ className = "" }) => {
             <AiOutlineClose size={24} />
           </IconButton>
           <nav className="flex flex-col gap-4 font-medium text-gray-100">
-            <Link href="/" className="no-underline" onClick={toggleMenu}>
+            <Link
+              href="/"
+              className="no-underline"
+              onClick={toggleMenu}
+              style={{ textDecoration: "none", color: "white" }}
+            >
               Home
             </Link>
             <Link
               href="/showroom"
               className="no-underline font-semibold text-darkorange"
               onClick={toggleMenu}
+              style={{ textDecoration: "none" }}
             >
               Showroom
             </Link>
-            <Link href="/pricing" className="no-underline" onClick={toggleMenu}>
+            <Link
+              href="/pricing"
+              className="no-underline"
+              onClick={toggleMenu}
+              style={{ textDecoration: "none" }}
+            >
               Pricing
             </Link>
             <Link
               href="/products"
               className="flex items-center no-underline"
               onClick={toggleMenu}
+              style={{ textDecoration: "none" }}
             >
               <Text>Products </Text>
               <RiArrowDownSFill />
             </Link>
-            <Link href="/blog" className="no-underline" onClick={toggleMenu}>
+            <Link
+              href="/blog"
+              className="no-underline"
+              onClick={toggleMenu}
+              style={{ textDecoration: "none" }}
+            >
               Blog
             </Link>
           </nav>
+
           <div className="flex flex-col mt-4">
             {!isAuthenticated ? (
               <>

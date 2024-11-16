@@ -56,11 +56,11 @@ const SignUpPage = () => {
     signIn("google", { callbackUrl: "/" });
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      router.push("/");
-    }
-  }, [status, router]);
+  // useEffect(() => {
+  //   if (status === "authenticated") {
+  //     router.push("/");
+  //   }
+  // }, [status, router]);
 
   return (
     <Container component="main" maxWidth="xs" className="mt-24">

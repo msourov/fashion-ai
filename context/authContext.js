@@ -66,15 +66,14 @@ export const AuthProvider = ({ children }) => {
     signOut({ callbackUrl: "/" });
   };
 
-  useEffect(() => {
-    if (status === "authenticated") {
-      if (router.pathname !== "/") {
-        router.push("/");
-      }
-    }
-  }, [status]);
+  // useEffect(() => {
+  //   if (status === "authenticated" && router.pathname !== "/") {
+  //     router.push("/");
+  //   }
+  // }, [status, router]);
+  // console.log(status);
 
-  const isAuthenticated = status === "authenticated";
+  const isAuthenticated = status === "authenticated" && session?.user;
 
   return (
     <AuthContext.Provider
