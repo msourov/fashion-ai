@@ -11,7 +11,7 @@ const Clothes = ({ selectedProduct, handleCardClick }) => {
   const router = useRouter();
 
   const handleGenerateClick = () => {
-    router.replace("/generated");
+    router.push("/generated");
   };
 
   useEffect(() => {

@@ -12,6 +12,7 @@ import {
 import { TiUpload } from "react-icons/ti";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 
 const modalStyle = {
   position: "absolute",
@@ -21,7 +22,8 @@ const modalStyle = {
   width: "90%",
   maxWidth: 800,
   bgcolor: "background.paper",
-  borderRadius: "20px",
+  border: "2px solid #000",
+  boxShadow: 24,
   p: 4,
 };
 
@@ -44,6 +46,16 @@ const ClothesModal = ({ open, setOpen }) => {
   const [seasons, setSeasons] = useState([]);
   const [colors, setColors] = useState([]); // State to hold color data
   const { data: session } = useSession();
+  const router = useRouter();
+
+  useEffect(() => {
+    return () => {
+      if (formData.img_url) {
+        URL.revokeObjectURL(formData.img_url);
+      }
+    };
+  }, [formData.img_url]);
+
   useEffect(() => {
     const fetchOptions = async () => {
       try {
@@ -80,6 +92,7 @@ const ClothesModal = ({ open, setOpen }) => {
   };
 
   const handleImageUpload = (e) => {
+    console.log(e.target.files);
     const uploadedImage = e.target.files[0];
     if (uploadedImage) {
       setImage(uploadedImage);
@@ -88,6 +101,8 @@ const ClothesModal = ({ open, setOpen }) => {
         img_url: URL.createObjectURL(uploadedImage),
         s3_path: `https://s3.amazonaws.com/your-bucket/${uploadedImage.name}`,
       }));
+
+      e.target.value = null;
     }
   };
 
@@ -99,7 +114,9 @@ const ClothesModal = ({ open, setOpen }) => {
   };
 
   const handleSubmit = async (e) => {
+    if (!session?.user) router.push("/login");
     e.preventDefault();
+    console.log(JSON.stringify(formData, undefined, 2));
     try {
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_API}/fashion/clothes`,
@@ -139,36 +156,52 @@ const ClothesModal = ({ open, setOpen }) => {
         <form onSubmit={handleSubmit}>
           <div className="modal-body flex flex-col md:flex-row gap-6">
             {/* Image Upload Section */}
-            <div className="image-upload bg-[#ffe6cc] border-2 border-[#ff733b] rounded-lg w-full md:w-1/2 h-72 flex items-center justify-center text-center">
-              <div className="text-center">
-                <TiUpload className="text-orange-500 w-[40px] h-[40px]" />
-                <p className="text-[#ff733b] font-bold mt-0">Image Upload</p>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageUpload}
-                  className="hidden"
-                  id="image-upload"
-                />
-                <label
-                  htmlFor="image-upload"
-                  className="cursor-pointer text-purple-800 text-lg font-bold opacity-50"
-                >
-                  Click to Upload
-                </label>
+            <div className="w-[80%] mx-auto">
+              <div className="image-upload bg-[#ffe6cc] border-2 border-[#ff733b] rounded-lg w-full md:w-[80%] lg:w-[90%] h-72 flex items-center justify-center text-center py-4 gap-2">
+                <div className="text-center w-full h-full flex flex-col">
+                  <div className="my-auto max-h-[90%] flex justify-center items-center">
+                    {formData.img_url ? (
+                      <img
+                        src={formData.img_url}
+                        alt="Uploaded Preview"
+                        className="max-w-[90%] max-h-[90%] object-contain rounded-md"
+                      />
+                    ) : (
+                      <div className="items-center">
+                        <TiUpload className="text-orange-500 w-[40px] h-[40px]" />
+                        <p className="text-[#ff733b] font-bold mt-0">
+                          Image Upload
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                    id="image-upload"
+                  />
+                  <label
+                    htmlFor="image-upload"
+                    className="cursor-pointer text-purple-800 text-lg font-bold opacity-50 mt-auto"
+                  >
+                    Click to Upload
+                  </label>
+                </div>
               </div>
-            </div>
 
-            {/* Image Preview Section */}
-            {/* <div className="mt-4 w-full md:w-1/2 flex justify-center">
-              {formData.img_url && (
-                <img
-                  src={formData.img_url}
-                  alt="Uploaded Preview"
-                  className="w-32 h-32 object-cover rounded-md"
-                />
-              )}
-            </div> */}
+              {/* Image Preview Section */}
+              {/* <div className="mt-4 w-full flex justify-center">
+                {formData.img_url && (
+                  <img
+                    src={formData.img_url}
+                    alt="Uploaded Preview"
+                    className="w-64 object-cover rounded-md"
+                  />
+                )}
+              </div> */}
+            </div>
 
             {/* Form Section */}
             <div className="form-section w-full md:w-1/2 space-y-6">
@@ -265,19 +298,22 @@ const ClothesModal = ({ open, setOpen }) => {
                   <label htmlFor="year" className="font-bold text-black">
                     Year
                   </label>
-                  <select
-                    id="year"
-                    name="year"
-                    value={formData.year}
-                    onChange={handleChange}
-                    className="border rounded-md px-3 py-2 text-sm w-full"
-                  >
-                    <option value="" disabled>
-                      Select Year
-                    </option>
-                    <option value="2024">2024</option>
-                    <option value="2023">2023</option>
-                  </select>
+                  <FormControl fullWidth size="small">
+                    <InputLabel>Year</InputLabel>
+                    <Select
+                      id="year"
+                      name="year"
+                      value={formData.year}
+                      onChange={handleChange}
+                      className="w-full"
+                    >
+                      {["2024", "2023", "2022", "2021"].map((item) => (
+                        <MenuItem key={item} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 </div>
 
                 <div className="flex flex-col w-1/2 gap-2">
@@ -307,7 +343,7 @@ const ClothesModal = ({ open, setOpen }) => {
                       onClick={() => handleColorSelect(color._id)} // Handle color selection
                     >
                       <div
-                        className="w-8 h-8 rounded-full"
+                        className="w-6 h-6 rounded-full"
                         style={{
                           backgroundColor: color.hexadecimal_value,
                         }}

@@ -16,7 +16,6 @@ const FrameComponent = ({ className = "" }) => {
   const { data: session, status } = useSession();
   const { isAuthenticated, logout, handleGoogleSignIn } = useAuth();
   const router = useRouter();
-
   const protectedRoutes = ["/profile"];
 
   const toggleMenu = () => {
@@ -61,23 +60,34 @@ const FrameComponent = ({ className = "" }) => {
 
         {/* Desktop Navigation Links */}
         <nav className="hidden md:flex gap-16 hover:text-darkorange font-medium">
-          <Link href="/" className={`${isActiveLink("/")}`}>
+          <Link href="/" className={`${isActiveLink("/")} no-underline`}>
             Home
           </Link>
-          <Link href="/showroom" className={`${isActiveLink("/showroom")}`}>
+          <Link
+            href="/showroom"
+            className={`${isActiveLink("/showroom")} no-underline`}
+          >
             Showroom
           </Link>
-          <Link href="/pricing" className={`${isActiveLink("/pricing")}`}>
+          <Link
+            href="/pricing"
+            className={`${isActiveLink("/pricing")} no-underline`}
+          >
             Pricing
           </Link>
           <Link
             href="/products"
-            className={`${isActiveLink("/products")} flex items-center`}
+            className={`${isActiveLink(
+              "/products"
+            )} flex items-center no-underline`}
           >
             Products
             <RiArrowDownSFill className="text-black" />
           </Link>
-          <Link href="/blog" className={`${isActiveLink("/blog")}`}>
+          <Link
+            href="/blog"
+            className={`${isActiveLink("/blog")} no-underline`}
+          >
             Blog
           </Link>
         </nav>
@@ -111,9 +121,13 @@ const FrameComponent = ({ className = "" }) => {
           ) : (
             <>
               <FaHeart className="text-red-500 w-[25px] h-[25px]" />
+              <Button variant="outlined" size="small">
+                History
+              </Button>
               <Button
                 className="text-orange-600 font-bold no-underline"
                 onClick={logout}
+                size="small"
               >
                 Logout
               </Button>
@@ -149,15 +163,15 @@ const FrameComponent = ({ className = "" }) => {
           <nav className="flex flex-col gap-4 font-medium text-gray-100">
             <Link
               href="/"
-              className="no-underline"
+              className={`${isActiveLink("/")} no-underline`}
               onClick={toggleMenu}
-              style={{ textDecoration: "none", color: "white" }}
+              style={{ textDecoration: "none" }}
             >
               Home
             </Link>
             <Link
               href="/showroom"
-              className="no-underline font-semibold text-darkorange"
+              className={`${isActiveLink("/showroom")} no-underline`}
               onClick={toggleMenu}
               style={{ textDecoration: "none" }}
             >
@@ -165,7 +179,7 @@ const FrameComponent = ({ className = "" }) => {
             </Link>
             <Link
               href="/pricing"
-              className="no-underline"
+              className={`${isActiveLink("/pricing")} no-underline`}
               onClick={toggleMenu}
               style={{ textDecoration: "none" }}
             >
@@ -173,7 +187,7 @@ const FrameComponent = ({ className = "" }) => {
             </Link>
             <Link
               href="/products"
-              className="flex items-center no-underline"
+              className={`${isActiveLink("/products")} no-underline`}
               onClick={toggleMenu}
               style={{ textDecoration: "none" }}
             >
@@ -182,7 +196,7 @@ const FrameComponent = ({ className = "" }) => {
             </Link>
             <Link
               href="/blog"
-              className="no-underline"
+              className={`${isActiveLink("/blog")} no-underline`}
               onClick={toggleMenu}
               style={{ textDecoration: "none" }}
             >
@@ -190,7 +204,7 @@ const FrameComponent = ({ className = "" }) => {
             </Link>
           </nav>
 
-          <div className="flex flex-col mt-4">
+          <div className="flex flex-col mt-4 gap-4">
             {!isAuthenticated ? (
               <>
                 <Button
@@ -230,10 +244,14 @@ const FrameComponent = ({ className = "" }) => {
               </>
             ) : (
               <>
-                <FaHeart className="text-red-600 w-[25px] h-[25px]" />
+                <FaHeart className="text-red-600 w-[25px] h-[25px] -mt-4" />
+                <Button variant="outlined" size="small">
+                  History
+                </Button>
                 <Button
-                  variant="filled"
-                  className="text-orange-600 font-bold no-underline"
+                  variant="outlined"
+                  size="small"
+                  className="text-orange-600 font-bold no-underline mb-4 mt-2"
                   onClick={logout}
                 >
                   Logout
