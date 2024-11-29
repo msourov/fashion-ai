@@ -1,19 +1,17 @@
-import { TextField, Button, Grid, Box, Modal } from "@mui/material";
 import Image from "next/image";
-import FrameComponent from "../components/frame-component";
-import { useState } from "react";
-import { IoMdCheckmark } from "react-icons/io";
-import { FaRegHeart } from "react-icons/fa";
-import { useDisclosure } from "@mantine/hooks";
-import CustomModalWithForm from "../components/UploadForm";
-import UploadForm from "../components/UploadForm";
-import { TiUpload } from "react-icons/ti";
-import Link from "next/link";
-import { Divider } from "@mantine/core";
-import Categories from "../components/Home/Categories";
+import { Suspense, useState } from "react";
 import Filter from "../components/Home/Filter";
 import Clothes from "../components/Home/Clothes";
-import ClothesModal from "../components/ClothUploadModal";
+import dynamic from "next/dynamic";
+
+const ClothesModal = dynamic(() =>
+  import("../components/ClothUploadModal", {
+    loading: () => <p>Loading...</p>,
+  })
+);
+const Categories = dynamic(() => import("../components/Home/Categories"), {
+  loading: () => <p>Loading...</p>,
+});
 
 const selectedProductImage = [
   {
@@ -63,12 +61,6 @@ const ECommerceProductsSelect = () => {
 
   return (
     <div className="w-full max-w-full bg-white overflow-hidden flex flex-col items-start justify-start text-left text-lg text-white font-inter">
-      <main className="w-full flex flex-col items-end justify-start max-w-full gap-[1.5rem]">
-        <FrameComponent />
-      </main>
-      <div className="w-[90vw] mx-auto">
-        <Divider size="xs" color="black" mb={30} />
-      </div>
       <section className="flex flex-col items-start justify-start w-full xl:w-[95%] text-left text-5xl gap-4 lg:gap-6 text-black font-inter">
         <Filter />
         <div className="flex w-full md:w-full mx-auto flex-col-reverse md:flex-row max-w-full md:items-start justify-between gap-2 xl:gap-4">
@@ -81,7 +73,7 @@ const ECommerceProductsSelect = () => {
           />
 
           <div className="flex flex-col items-start justify-start gap-[1.5rem] text-lg text-dimgray">
-            <div className="flex w-full flex-col items-start justify-start gap-4 text-lg text-dimgray">
+            {/* <div className="flex w-full flex-col items-start justify-start gap-4 text-lg text-dimgray">
               <div
                 className="relative  mx-auto w-[240px] h-[440px] lg:h-[540px] rounded-xl overflow-hidden bg-cover bg-top object-contain"
                 style={{ backgroundImage: `url(${imageUrl})` }}
@@ -112,7 +104,7 @@ const ECommerceProductsSelect = () => {
                   />
                 </div>
               </div>
-            </div>
+            </div> */}
 
             <div className="flex flex-row  mx-auto items-start justify-start gap-2.5">
               <div className="relative capitalize">tuck</div>
@@ -146,12 +138,10 @@ const ECommerceProductsSelect = () => {
             </div>
           </div>
         </div>
-        <ClothesModal open={open} setOpen={setOpen} />
+        <Suspense fallback={<div>loading...</div>}>
+          <ClothesModal open={open} setOpen={setOpen} />
+        </Suspense>
       </section>
-      <div className="bg-coral-200 w-full flex flex-row items-start justify-center py-6">
-        <footer className="h-[59.1px] relative bg-coral-200 hidden max-w-full" />
-        <div className="relative font-medium z-[1]">Copyright © 2024.</div>
-      </div>
     </div>
   );
 };

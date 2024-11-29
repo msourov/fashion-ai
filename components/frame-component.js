@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Button, Drawer, IconButton } from "@mui/material";
+import { Drawer, IconButton } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import { RiArrowDownSFill, RiMenu3Line } from "react-icons/ri";
@@ -8,7 +8,7 @@ import PropTypes from "prop-types";
 import { FaHeart } from "react-icons/fa";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { useAuth } from "../context/authContext";
 
 const FrameComponent = ({ className = "" }) => {
@@ -97,7 +97,8 @@ const FrameComponent = ({ className = "" }) => {
           {!isAuthenticated ? (
             <>
               <Button
-                className="text-gray-300 no-underline"
+                variant="filled"
+                className="no-underline"
                 onClick={handleLoginSignup}
               >
                 Login
@@ -107,7 +108,7 @@ const FrameComponent = ({ className = "" }) => {
                   router.push("/signup");
                 }}
                 disableElevation
-                variant="contained"
+                variant="light"
                 sx={{
                   textTransform: "none",
                   background: "#ff733b",
@@ -120,12 +121,16 @@ const FrameComponent = ({ className = "" }) => {
             </>
           ) : (
             <>
-              <FaHeart className="text-red-500 w-[25px] h-[25px]" />
-              <Button variant="outlined" size="small">
+              <Button
+                variant="light"
+                leftSection={<FaHeart className="text-red-600" />}
+                onClick={() => router.push("/favorites")}
+              >
                 History
               </Button>
               <Button
-                className="text-orange-600 font-bold no-underline"
+                variant="outline"
+                className="font-bold no-underline"
                 onClick={logout}
                 size="small"
               >
@@ -187,7 +192,9 @@ const FrameComponent = ({ className = "" }) => {
             </Link>
             <Link
               href="/products"
-              className={`${isActiveLink("/products")} no-underline`}
+              className={`${isActiveLink(
+                "/products"
+              )} no-underline flex items-center`}
               onClick={toggleMenu}
               style={{ textDecoration: "none" }}
             >
@@ -208,8 +215,8 @@ const FrameComponent = ({ className = "" }) => {
             {!isAuthenticated ? (
               <>
                 <Button
-                  variant="contained"
-                  className="no-underline bg-orange-500 text-white mb-4 rounded-lg"
+                  variant="filled"
+                  className="no-underline rounded-lg"
                   onClick={() => {
                     handleLoginSignup();
                     toggleMenu();
@@ -218,20 +225,16 @@ const FrameComponent = ({ className = "" }) => {
                   Login
                 </Button>
 
-                <Button
-                  variant="outlined"
-                  onClick={handleGoogleSignIn}
-                  className="text-gray-300 no-underline border border-orange-600 rounded-xl mb-4"
-                >
+                <Button variant="outline" onClick={handleGoogleSignIn}>
                   Sign in with Google
                 </Button>
                 <Button
+                  variant="light"
                   onClick={() => {
                     router.push("/signup");
                     toggleMenu();
                   }}
                   disableElevation
-                  variant="contained"
                   sx={{
                     textTransform: "none",
                     background: "#ff733b",
@@ -244,12 +247,18 @@ const FrameComponent = ({ className = "" }) => {
               </>
             ) : (
               <>
-                <FaHeart className="text-red-600 w-[25px] h-[25px] -mt-4" />
-                <Button variant="outlined" size="small">
+                <Button
+                  variant="light"
+                  size="small"
+                  leftSection={<FaHeart className="text-red-600" />}
+                  onClick={() => {
+                    router.push("/favorites");
+                  }}
+                >
                   History
                 </Button>
                 <Button
-                  variant="outlined"
+                  variant="light"
                   size="small"
                   className="text-orange-600 font-bold no-underline mb-4 mt-2"
                   onClick={logout}

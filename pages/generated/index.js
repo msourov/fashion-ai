@@ -134,13 +134,6 @@ const GeneratedPage = () => {
 
   return (
     <div className="w-full max-w-full bg-white overflow-hidden flex flex-col items-start justify-start text-left text-lg text-white font-inter">
-      <main className="w-full flex flex-col items-end justify-start max-w-full gap-[1.5rem]">
-        <FrameComponent />
-      </main>
-      <div className="w-[90vw] mx-auto">
-        <Divider size="xs" color="black" mb={30} />
-      </div>
-
       <section className="flex flex-col items-start justify-start w-full text-left text-5xl text-black font-inter">
         <div className="max-w-full flex flex-wrap items-start justify-start lg:ml-24 ml-4 gap-2">
           <div className="flex flex-row w-full max-w-full flex-wrap gap-2 lg:gap-6 items-center mt-2 mb-8">
@@ -354,12 +347,6 @@ const GeneratedPage = () => {
           </div>
         </div>
       </section>
-      <div className="bg-coral-200 w-full flex flex-row items-start justify-center py-6">
-        <footer className="h-[59.1px] relative bg-coral-200 hidden max-w-full" />
-        <div className="relative font-medium z-[1]">
-          Copyright © 2024 ib-themesinc.
-        </div>
-      </div>
     </div>
   );
 };

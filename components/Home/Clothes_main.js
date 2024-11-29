@@ -6,17 +6,6 @@ import { IoMdCheckmark } from "react-icons/io";
 import axios from "axios";
 import { useRouter } from "next/router";
 
-const mockLastProduct = {
-  id: 9,
-  img_url: "/group-4@2x.png",
-  price: "100$",
-  item_code: "SP-240100",
-  type: "Dress",
-  brand: "Dolce & Gabbana",
-  color_id: "Orange",
-  style_id: "Casual",
-};
-
 const Clothes = ({ selectedProduct, handleCardClick }) => {
   const [products, setProducts] = useState([]);
   const router = useRouter();
@@ -40,27 +29,18 @@ const Clothes = ({ selectedProduct, handleCardClick }) => {
     fetchProducts();
   }, []);
 
+  const mockLastProduct = {
+    id: 9,
+    img_url: "/group-4@2x.png",
+    price: "100$",
+    item_code: "SP-240100",
+    type: "Dress",
+    brand: "Dolce & Gabbana",
+    color_id: "Orange",
+    style_id: "Casual",
+  };
+
   const productsWithLastProduct = [...products, mockLastProduct];
-
-  const handleLikeProduct = async (userId, productId) => {
-    console.log(userId, productId);
-    try {
-      const res = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_API}/fashion/user-fav`,
-        {
-          user_id: userId,
-          item_code: productId,
-        }
-      );
-      console.log(res);
-    } catch (error) {
-      console.error("An error occurred", error);
-    }
-  };
-
-  const handleSelectProduct = () => {
-    console.log("selected");
-  };
 
   return (
     <div className="w-full justify-center lg:w-[65%] flex flex-col md:items-start px-2 xl:px-5">
@@ -92,13 +72,12 @@ const Clothes = ({ selectedProduct, handleCardClick }) => {
                   height: "400px",
                   overflow: "hidden",
                   cursor: "pointer",
-                  boxSizing: "border-box",
                 }}
-                className="group border hover:border-orange-500 transition-all duration-300"
               >
                 <div
-                  className="relative h-[320px] shadow-md rounded-t-lg overflow-hidden border group-hover:border-orange-600"
+                  className="relative h-[320px] shadow-md rounded-t-lg overflow-hidden"
                   style={{
+                    border: isSelected ? "2px solid orange" : "",
                     borderRadius: "0.5rem",
                   }}
                 >
@@ -107,7 +86,7 @@ const Clothes = ({ selectedProduct, handleCardClick }) => {
                     alt={product.item_code || product.code}
                     className="w-full h-full object-cover"
                   />
-                  {/* {isSelected && (
+                  {isSelected && (
                     <>
                       <div
                         className="absolute top-0 right-0 rounded-md p-1"
@@ -139,42 +118,7 @@ const Clothes = ({ selectedProduct, handleCardClick }) => {
                         <FaRegHeart className=" font-bold text-white p-1" />
                       </div>
                     </>
-                  )} */}
-                  <div
-                    className="absolute top-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "28px",
-                      height: "28px",
-                      border: "1px solid orange",
-                      backgroundColor: "#FF733B",
-                      borderRadius: "50%",
-                    }}
-                    onClick={() =>
-                      handleLikeProduct(product.user_id, product.item_code)
-                    }
-                  >
-                    <FaRegHeart className="text-white p-1" />
-                  </div>
-
-                  {/* Checkmark Icon */}
-                  <div
-                    className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "28px",
-                      height: "28px",
-                      border: "1px solid orange",
-                      borderRadius: "50%",
-                    }}
-                    onClick={() => handleSelectProduct()}
-                  >
-                    <IoMdCheckmark className="text-orange-500 text-lg font-bold" />
-                  </div>
+                  )}
 
                   {!isLastProduct && (
                     <div className="absolute bottom-0 right-0 bg-black text-white px-3 py-1 rounded-tl-lg rounded-br-lg text-sm font-bold">

@@ -8,6 +8,7 @@ import "./global.css";
 import { MantineProvider } from "@mantine/core";
 import { SessionProvider } from "next-auth/react";
 import { AuthProvider } from "../context/authContext";
+import DefaultLayout from "../components/DefaultLayout";
 
 export default function MyApp(props) {
   const { Component, pageProps } = props;
@@ -43,7 +44,9 @@ export default function MyApp(props) {
         <MantineProvider>
           <SessionProvider session={pageProps.session}>
             <AuthProvider>
-              <Component {...pageProps} />
+              <DefaultLayout>
+                <Component {...pageProps} />
+              </DefaultLayout>
             </AuthProvider>
           </SessionProvider>
         </MantineProvider>
