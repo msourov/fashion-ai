@@ -41,11 +41,13 @@ const ClothesModal = ({ open, setOpen }) => {
     s3_path: "",
   });
 
-  const [image, setImage] = useState(null);
   const [categories, setCategories] = useState([]);
   const [styles, setStyles] = useState([]);
   const [seasons, setSeasons] = useState([]);
-  const [colors, setColors] = useState([]); // State to hold color data
+  const [colors, setColors] = useState([]);
+  const [image, setImage] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+
   const { data: session } = useSession();
   const router = useRouter();
 
@@ -58,31 +60,29 @@ const ClothesModal = ({ open, setOpen }) => {
   }, [formData.img_url]);
 
   useEffect(() => {
+    console.log(open);
+    if (!open) return;
+
     const fetchOptions = async () => {
       try {
-        const categoryResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_API}/fashion/categories`
-        );
-        const styleResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_API}/fashion/styles`
-        );
-        const seasonResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_BASE_API}/fashion/seasons`
-        );
-        const colorResponse = await axios.get(
-          "https://backend-1s2t.onrender.com/api/fashion/colors"
-        ); // Fetching colors from the API
+        const [categoryRes, styleRes, seasonRes, colorRes] = await Promise.all([
+          axios.get(`${process.env.NEXT_PUBLIC_BASE_API}/fashion/categories`),
+          axios.get(`${process.env.NEXT_PUBLIC_BASE_API}/fashion/styles`),
+          axios.get(`${process.env.NEXT_PUBLIC_BASE_API}/fashion/seasons`),
+          axios.get("https://backend-1s2t.onrender.com/api/fashion/colors"),
+        ]);
 
-        setCategories(categoryResponse.data);
-        setStyles(styleResponse.data);
-        setSeasons(seasonResponse.data);
-        setColors(colorResponse.data); // Set color data from API
+        setCategories(categoryRes.data);
+        setStyles(styleRes.data);
+        setSeasons(seasonRes.data);
+        setColors(colorRes.data);
       } catch (error) {
         console.error("Error fetching options:", error);
       }
     };
+
     fetchOptions();
-  }, []);
+  }, [open]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -92,54 +92,75 @@ const ClothesModal = ({ open, setOpen }) => {
     }));
   };
 
-  const handleImageUpload = (e) => {
-    console.log(e.target.files);
+  const handleImageUpload = async (e) => {
     const uploadedImage = e.target.files[0];
     if (uploadedImage) {
       setImage(uploadedImage);
-      setFormData((prevState) => ({
-        ...prevState,
-        img_url: URL.createObjectURL(uploadedImage),
-        s3_path: `https://s3.amazonaws.com/your-bucket/${uploadedImage.name}`,
-      }));
+      setIsUploading(true);
 
-      e.target.value = null;
+      try {
+        const uploadData = new FormData();
+        uploadData.append("file", uploadedImage);
+        uploadData.append(
+          "upload_preset",
+          process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET
+        );
+
+        const response = await fetch(
+          `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
+          {
+            method: "POST",
+            body: uploadData,
+          }
+        );
+
+        const data = await response.json();
+        console.log("Cloudinary response:", data);
+
+        setFormData((prevState) => ({
+          ...prevState,
+          img_url: data.secure_url,
+          s3_path: data.secure_url,
+        }));
+      } catch (error) {
+        console.error("Error uploading to Cloudinary:", error);
+      } finally {
+        setIsUploading(false);
+        e.target.value = null;
+      }
     }
   };
 
   const handleColorSelect = (colorId) => {
     setFormData((prevState) => ({
       ...prevState,
-      color_id: colorId, // Set the selected color id
+      color_id: colorId,
     }));
   };
 
   const handleSubmit = async (e) => {
-    if (!session?.user) router.push("/login");
     e.preventDefault();
-    console.log(JSON.stringify(formData, undefined, 2));
+    if (!session?.user) {
+      router.push("/login");
+      return;
+    }
+
     try {
+      const payload = {
+        ...formData,
+        price: parseFloat(formData.price),
+        user_id: session.user.id,
+      };
+
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_BASE_API}/fashion/clothes`,
-        {
-          item_code: formData.item_code,
-          category_id: formData.category_id,
-          style_id: formData.style_id,
-          year: formData.year,
-          season_id: formData.season_id,
-          price: parseFloat(formData.price),
-          color_id: formData.color_id,
-          user_id: session.user.id,
-          s3_path: "https://s3.amazonaws.com/your-bucket/cloth-image.jpg",
-          img_url:
-            "https://images.unsplash.com/photo-1529636273736-fc88b31ea9d9?q=80&w=1976&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-        }
+        payload
       );
-      console.log(response);
+      console.log("Product upload response:", response);
       alert("Product uploaded successfully!");
       setOpen(false);
     } catch (error) {
-      console.error("Error uploading product:", error);
+      console.log("Error uploading product:", error);
       alert("Failed to upload product.");
     }
   };
@@ -183,13 +204,18 @@ const ClothesModal = ({ open, setOpen }) => {
                     onChange={handleImageUpload}
                     className="hidden"
                     id="image-upload"
+                    disabled={isUploading}
                   />
-                  <label
-                    htmlFor="image-upload"
-                    className="cursor-pointer text-purple-800 text-lg font-bold opacity-50 mt-auto"
-                  >
-                    Click to Upload
-                  </label>
+                  {isUploading ? (
+                    <p>Uploading...</p>
+                  ) : (
+                    <label
+                      htmlFor="image-upload"
+                      className="cursor-pointer text-purple-800 text-lg font-bold opacity-50 mt-auto"
+                    >
+                      Click to Upload
+                    </label>
+                  )}
                 </div>
               </div>
 

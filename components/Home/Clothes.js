@@ -140,41 +140,45 @@ const Clothes = ({ selectedProduct, handleCardClick }) => {
                       </div>
                     </>
                   )} */}
-                  <div
-                    className="absolute top-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "28px",
-                      height: "28px",
-                      border: "1px solid orange",
-                      backgroundColor: "#FF733B",
-                      borderRadius: "50%",
-                    }}
-                    onClick={() =>
-                      handleLikeProduct(product.user_id, product.item_code)
-                    }
-                  >
-                    <FaRegHeart className="text-white p-1" />
-                  </div>
+                  {!isLastProduct && (
+                    <div
+                      className="absolute top-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "28px",
+                        height: "28px",
+                        border: "1px solid orange",
+                        backgroundColor: "#FF733B",
+                        borderRadius: "50%",
+                      }}
+                      onClick={() =>
+                        handleLikeProduct(product.user_id, product.item_code)
+                      }
+                    >
+                      <FaRegHeart className="text-white p-1" />
+                    </div>
+                  )}
 
+                  {!isLastProduct && (
+                    <div
+                      className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "28px",
+                        height: "28px",
+                        border: "1px solid orange",
+                        borderRadius: "50%",
+                      }}
+                      onClick={() => handleSelectProduct()}
+                    >
+                      <IoMdCheckmark className="text-orange-500 text-lg font-bold" />
+                    </div>
+                  )}
                   {/* Checkmark Icon */}
-                  <div
-                    className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    style={{
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      width: "28px",
-                      height: "28px",
-                      border: "1px solid orange",
-                      borderRadius: "50%",
-                    }}
-                    onClick={() => handleSelectProduct()}
-                  >
-                    <IoMdCheckmark className="text-orange-500 text-lg font-bold" />
-                  </div>
 
                   {!isLastProduct && (
                     <div className="absolute bottom-0 right-0 bg-black text-white px-3 py-1 rounded-tl-lg rounded-br-lg text-sm font-bold">

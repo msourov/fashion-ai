@@ -73,7 +73,7 @@ const ECommerceProductsSelect = () => {
           />
 
           <div className="flex flex-col items-start justify-start gap-[1.5rem] text-lg text-dimgray">
-            {/* <div className="flex w-full flex-col items-start justify-start gap-4 text-lg text-dimgray">
+            <div className="flex w-full flex-col items-start justify-start gap-4 text-lg text-dimgray">
               <div
                 className="relative  mx-auto w-[240px] h-[440px] lg:h-[540px] rounded-xl overflow-hidden bg-cover bg-top object-contain"
                 style={{ backgroundImage: `url(${imageUrl})` }}
@@ -104,7 +104,7 @@ const ECommerceProductsSelect = () => {
                   />
                 </div>
               </div>
-            </div> */}
+            </div>
 
             <div className="flex flex-row  mx-auto items-start justify-start gap-2.5">
               <div className="relative capitalize">tuck</div>
