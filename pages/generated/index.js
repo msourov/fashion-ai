@@ -283,7 +283,7 @@ const GeneratedPage = () => {
             </Grid>
           </div>
 
-          {/* right sidea */}
+          {/* right side */}
           <div className="lg:w-[35%] border rounded-lg mb-16">
             <h1 className="text-5xl text-center font-bold mb-6 ">
               Clothes From Generation

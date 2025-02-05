@@ -1,6 +1,7 @@
 import { Card, Image, Text, Button, Divider } from "@mantine/core";
 
 const FavoritesPage = ({ favorites }) => {
+  console.log(favorites);
   return (
     <div className="max-w-4xl mx-auto">
       <Text size="xl" weight={700} align="center" mb={10}>
